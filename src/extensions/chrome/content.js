@@ -1,5 +1,7 @@
 (function() {
 
+    var runningInspectors = {};
+
     function getExtensionUrl() {
         return chrome.runtime.getURL("");
     }
@@ -36,8 +38,46 @@
         return script;
     }
 
-    function createInspector(tabId) {
+    function toggleInspector(tabId) {
+        var styleEl = null;
+        var scriptEl = null;
 
+        // if there is an inspector running for the tab then remove it
+        if (runningInspectors[tabId]) {
+
+            // dispatch event to shutdown the inspector
+            var shutdownEvent = document.createEvent("Event");
+            shutdownEvent.initEvent("AstridInspectorShutdownEvent", true, true);
+            document.dispatchEvent(shutdownEvent);
+
+            // remove styles and scripts
+            styleEl = runningInspectors[tabId].styleEl;
+            scriptEl = runningInspectors[tabId].scriptEl;
+
+            if (styleEl) {
+                document.head.removeChild(styleEl);
+            }
+
+            if (scriptEl) {
+                document.body.removeChild(scriptEl);
+            }
+
+            runningInspectors[tabId].styleEl = null;
+            runningInspectors[tabId].scriptEl = null;
+
+            delete runningInspectors[tabId];
+        }
+
+        // otherwise create a new inspector
+        else {
+            styleEl = insertStyleSheet("css/inspector.css");
+            scriptEl = insertScript("inspector.js", false);
+
+            runningInspectors[tabId] = {
+                styleEl: styleEl,
+                scriptEl: scriptEl
+            };
+        }
     }
 
     window.addEventListener("message", function(e) {
@@ -53,10 +93,13 @@
     });
 
     chrome.runtime.onMessage.addListener(function(message, sender) {
+        if (!message) {
+            return;
+        }
+
         // launch the inspector
-        if (message && message.type === "astrid-launch-inspector") {
-            insertStyleSheet("css/inspector.css");
-            insertScript("inspector.js", false);
+        if (message.type === "astrid-launch-inspector") {
+            toggleInspector(message.tabId);
         }
     });
 

@@ -5,5 +5,11 @@ import Inspector from "./Inspector"
     var app = new Inspector(window.astrid);
     app.run();
 
-    console.log("INSPECTOR LOADED");
+    document.addEventListener("AstridInspectorShutdownEvent", function() {
+        app.shutdown();
+
+        console.log("INSPECTOR: UNLOADED");
+    }, false);
+
+    console.log("INSPECTOR: LOADED");
 }());

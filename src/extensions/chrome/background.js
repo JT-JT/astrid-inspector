@@ -18,7 +18,8 @@
     // executed when the page action is clicked
     function onPageActionClicked(tab) {
         chrome.tabs.sendMessage(tab.id, {
-            type: "astrid-launch-inspector"
+            type: "astrid-launch-inspector",
+            tabId: tab.id
         });
     }
 

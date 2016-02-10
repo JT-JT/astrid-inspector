@@ -29,12 +29,10 @@ class InlineWindow extends Window {
     }
 
     close() {
-        if (!this.element) {
-            return;
+        if (this.element) {
+            document.body.removeChild(this.element);
+            this.element = null;
         }
-
-        document.body.removeChild(this.element);
-        this.element = null;
 
         this.state.isOpen = false;
         this.state.isVisible = false;

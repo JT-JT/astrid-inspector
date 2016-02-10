@@ -16,6 +16,18 @@ class Inspector {
         this.window = new InlineWindow(this);
         this.window.open();
     }
+
+    shutdown() {
+        if (this.window) {
+            this.window.close();
+            this.window = null;
+        }
+
+        if (this.runtime) {
+            this.runtime.inspector = null;
+            this.runtime = null;
+        }
+    }
 }
 
 export default Inspector;
