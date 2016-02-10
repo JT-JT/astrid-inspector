@@ -1,0 +1,27 @@
+{
+  "name": "astrid-inspector",
+  "version": "1.0.0",
+  "description": "Extends the Chrome Developer Tools to allow inspecting Astrid applications.",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build-chrome": "node tasks/build --chrome",
+    "build-chrome-debug": "node tasks/build --chrome --debug"
+  },
+  "engines": {
+    "node": ">= 0.10.0",
+    "npm": ">= 2.0.0"
+  },
+  "author": "Justin Thomas",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^1.1.1"
+  },
+  "devDependencies": {
+    "babel-preset-es2015-loose": "^6.1.3",
+    "babelify": "^7.2.0",
+    "browserify": "^11.2.0",
+    "fs-extra": "^0.26.4"
+  }
+}
